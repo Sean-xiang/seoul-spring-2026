@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Seoul Spring 2026 | 櫻花浪漫之行</title>
+    <title>Seoul Spring 2026 | 櫻花浪漫終極攻略</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
@@ -11,6 +11,7 @@
         :root {
             --cherry-pink: #ff9a9e;
             --soft-blue: #e0eafc;
+            --dcard-blue: #3382ff;
         }
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -33,7 +34,6 @@
         .nav-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
-            border: 1px solid transparent;
         }
         .nav-btn.active {
             background: var(--cherry-pink);
@@ -48,18 +48,16 @@
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            min-height: 60vh;
         }
         .map-link {
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #ff758c;
             background: rgba(255, 117, 140, 0.1);
             padding: 4px 10px;
             border-radius: 99px;
-            transition: all 0.2s;
-            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            font-weight: bold;
         }
         .timeline-line { border-left: 2px solid rgba(255, 154, 158, 0.2); }
         .time-node::before {
@@ -73,19 +71,23 @@
             background: var(--cherry-pink);
             border: 2px solid white;
         }
-        .ai-box {
-            background: linear-gradient(135deg, #fff 0%, #fff0f5 100%);
-            border: 1px solid #ffdae0;
+        .tip-box {
+            display: none;
+            font-size: 0.85rem;
+            background: #fffafa;
+            border-left: 4px solid #ff9a9e;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            line-height: 1.5;
         }
-        .loading-dots:after {
-            content: '.';
-            animation: dots 1.5s steps(5, end) infinite;
+        .clickable-node { 
+            cursor: pointer; 
+            transition: transform 0.2s;
         }
-        @keyframes dots {
-            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
-            40% { color: #ff9a9e; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
-            60% { text-shadow: .25em 0 0 #ff9a9e, .5em 0 0 rgba(0,0,0,0); }
-            80%, 100% { text-shadow: .25em 0 0 #ff9a9e, .5em 0 0 #ff9a9e; }
+        .clickable-node:active {
+            transform: scale(0.98);
         }
         .day-badge {
             font-size: 0.65rem;
@@ -97,48 +99,133 @@
             margin-bottom: 4px;
             display: inline-block;
         }
+        .dcard-footer-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            background: var(--dcard-blue);
+            color: white;
+            text-align: center;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 24px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .dcard-footer-btn:active { transform: scale(0.95); opacity: 0.9; }
+        
+        .highlight-item {
+            border: 1px solid rgba(255, 154, 158, 0.4);
+            background: rgba(255, 245, 245, 0.8);
+        }
+        .important-text { color: #e11d48; font-weight: bold; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
 
     <!-- Header -->
     <header class="pt-8 pb-4 px-6 text-center">
         <h1 class="text-2xl font-bold text-gray-800 tracking-tight">首爾櫻花 2026 ✨</h1>
-        <p class="text-pink-400 text-[10px] tracking-[0.3em] mt-1 font-bold italic underline decoration-pink-100 uppercase">AI Smart Itinerary</p>
+        <p class="text-pink-400 text-[10px] tracking-[0.3em] mt-1 font-bold italic underline">完整攻略 & 行程整合版</p>
     </header>
 
     <!-- 分頁選單 -->
-    <nav class="sticky-nav px-4 py-4 mb-4 overflow-x-auto no-scrollbar flex justify-between items-center space-x-2">
-        <button onclick="showDay('day1')" class="nav-btn flex-1 px-4 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 active shadow-sm" data-day="day1">D1</button>
-        <button onclick="showDay('day2')" class="nav-btn flex-1 px-4 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day2">D2</button>
-        <button onclick="showDay('day3')" class="nav-btn flex-1 px-4 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day3">D3</button>
-        <button onclick="showDay('day4')" class="nav-btn flex-1 px-4 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day4">D4</button>
-        <button onclick="showDay('day5')" class="nav-btn flex-1 px-4 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day5">D5</button>
-        <button onclick="showDay('day6')" class="nav-btn flex-1 px-4 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day6">D6</button>
+    <nav class="sticky-nav px-4 py-4 mb-4 overflow-x-auto no-scrollbar flex space-x-2">
+        <button onclick="showDay('prep')" class="nav-btn flex-1 min-w-[70px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="prep">💡攻略</button>
+        <button onclick="showDay('day1')" class="nav-btn flex-1 min-w-[60px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day1">D1</button>
+        <button onclick="showDay('day2')" class="nav-btn flex-1 min-w-[60px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day2">D2</button>
+        <button onclick="showDay('day3')" class="nav-btn flex-1 min-w-[60px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day3">D3</button>
+        <button onclick="showDay('day4')" class="nav-btn flex-1 min-w-[60px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day4">D4</button>
+        <button onclick="showDay('day5')" class="nav-btn flex-1 min-w-[60px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day5">D5</button>
     </nav>
 
     <main class="px-5 max-w-md mx-auto">
         
-        <!-- Day 1 -->
-        <section id="day1" class="day-content active animate__animated animate__fadeIn">
+        <!-- 出發前攻略 -->
+        <section id="prep" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
-                <span class="day-badge">定位：純移動，不消耗體力</span>
-                <h2 class="text-lg font-bold text-pink-500">3/28 (五) 深夜抵達</h2>
+                <span class="day-badge">PRE-TRIP</span>
+                <h2 class="text-lg font-bold text-gray-700">準備清單 (點擊查看詳細)</h2>
             </div>
-            <div class="glass-card rounded-3xl p-6 timeline-line ml-2">
-                <div class="time-node relative mb-8 pl-4">
+            <div class="space-y-4">
+                <div class="glass-card p-5 rounded-2xl shadow-sm border-l-4 border-pink-400 clickable-node" onclick="toggleTip('p1')">
+                    <h3 class="font-bold text-pink-600 mb-1">🔌 電壓與插頭</h3>
+                    <p class="text-xs text-gray-500">韓國與台灣不同，需注意...</p>
+                    <div id="p1" class="tip-box">
+                        韓國電壓 220V，插頭為「雙圓頭」。<br>
+                        建議購買一個「萬國轉接頭」或專門的韓國轉接頭。若要充相機/筆電，確認裝置支援 110V-240V。
+                    </div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl shadow-sm border-l-4 border-blue-400 clickable-node" onclick="toggleTip('p2')">
+                    <h3 class="font-bold text-blue-600 mb-1">📱 導航與排隊 APP</h3>
+                    <p class="text-xs text-gray-500">Google Map 在韓國不太好用...</p>
+                    <div id="p2" class="tip-box">
+                        • <strong>Naver Map</strong>: 找路、看公車時間最準。<br>
+                        • <strong>Papago</strong>: 拍照翻譯菜單神器。<br>
+                        • <strong>Catchtable</strong>: 許多名店（如 Artist Bakery）可用此 APP 事先或現場遠端排隊。
+                    </div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl shadow-sm border-l-4 border-green-400 clickable-node" onclick="toggleTip('p3')">
+                    <h3 class="font-bold text-green-600 mb-1">💳 交通卡 可選擇T-Pass + 氣候同行卡</h3>
+                    
+                    <p class="text-xs text-gray-500">
+                        首爾地鐵可選擇 T-pass（機場 → 弘大）+ 氣候同行卡
+                    </p>
+
+                    <div id="p3" class="tip-box">
+                        氣候同行卡：去地鐵服務台或 CU / GS25 購買。推薦「黑色卡面」觀光版，可依天數購買（如 5 日券）。<br>
+                        <span class="important-text">注意：購買需現金。</span>
+                        <br><br>
+
+                        ⚠️ <strong>重要提醒：</strong><br>
+                        氣候同行卡「不能」從仁川機場搭到弘大（AREX 機場鐵路不適用）。<br>
+                        因此第一天必須使用 T-money / T-pass 才能從機場進市區。<br><br>
+
+                        💰 <strong>建議T-money加值金額：</strong><br>
+                        仁川機場 → 弘大（AREX 普通列車）約 ₩4,150～₩4,750<br>
+                        建議至少加值 ₩10,000（包含機場進市區 + 當天備用交通費）<br><br>
+
+                        🎥 <strong>免費 T-money 教學影片：</strong><br>
+                        <a href="https://www.threads.com/@siasopretty/post/DQUURP3gHXM/media"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="trafic">
+                        點我觀看教學
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 1 -->
+        <section id="day1" class="day-content animate__animated animate__fadeIn">
+            <div class="mb-4 text-center">
+                <span class="day-badge">3/28 (FRI)</span>
+                <h2 class="text-lg font-bold text-pink-500">深夜首爾抵達</h2>
+            </div>
+            <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-8">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d1-1')">
                     <span class="text-pink-500 font-bold text-sm block mb-1">21:30</span>
                     <div class="flex items-center justify-between">
                         <span class="text-gray-800 font-bold">抵達仁川機場 (ICN)</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Incheon+International+Airport" target="_blank" class="map-link">📍 導航</a>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-1">出關預計 22:30–23:00。搭乘 AREX 直達弘大。</p>
+                    <div id="d1-1" class="tip-box">
+                        出關後可先去超商買點零食。若要搭地鐵進入市區，注意末班車時間。
+                    </div>
                 </div>
-                <div class="time-node relative pl-4">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d1-2')">
                     <span class="text-pink-500 font-bold text-sm block mb-1">23:30</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold text-lg">弘大住宿 Check-in</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Hongik+Univ.+Station" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-gray-800 font-bold">弘大住宿 + Puradak炸雞(弘大)</span>
+                        <a href="https://www.google.com/search?q=+%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C+%EB%A7%88%ED%8F%AC%EA%B5%AC+%EC%84%9C%EA%B5%90%EB%8F%99+364-28&sca_esv=6e41336ec81890d2&rlz=1C1CHZN_zh-TWTW1108TW1108&udm=1&biw=1280&bih=607&sxsrf=ANbL-n76Zhym4jFAvK_qlG8vRjJag-2m0Q%3A1772262693094&ei=JZWiaZq6BZG_vr0PmbiAiAY&ved=0ahUKEwja4JSC0fuSAxWRn68BHRkcAGEQ4dUDCBE&uact=5&oq=+%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C+%EB%A7%88%ED%8F%AC%EA%B5%AC+%EC%84%9C%EA%B5%90%EB%8F%99+364-28&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLWxvY2FsIisg7ISc7Jq47Yq567OE7IucIOuniO2PrOq1rCDshJzqtZDrj5kgMzY0LTI4MgUQABjvBTIFEAAY7wUyBRAAGO8FMgUQABjvBTIFEAAY7wVIoQZQAFgAcAB4AJABAJgBmQGgAZkBqgEDMC4xuAEDyAEA-AEC-AEBmAIBoAKhAZgDAJIHAzAuMaAH6AKyBwMwLjG4B6EBwgcDMi0xyAcGgAgB&sclient=gws-wiz-modeless-local" target="_blank" class="map-link">📍 導航搜尋 " 서울특별시 마포구 서교동 364-28"</a>
+                    </div>
+                    <div id="d1-2" class="tip-box">
+                        推薦 <strong>Puradak (普拉達炸雞)</strong>。<br>
+                        必點口味：Black Alio (黑蒜) 或 Corn-so-amazing (玉米)。
                     </div>
                 </div>
             </div>
@@ -147,276 +234,251 @@
         <!-- Day 2 -->
         <section id="day2" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
-                <span class="day-badge">策略：適應地鐵節奏，明洞友善線</span>
-                <h2 class="text-lg font-bold text-pink-500">3/29 (六) 明洞與首爾塔</h2>
+                <span class="day-badge">3/29 (SAT)</span>
+                <h2 class="text-lg font-bold text-pink-500">明洞時尚與首爾塔</h2>
             </div>
             <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-6">
-                <div class="time-node relative pl-4">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">09:30</span>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d2-1')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">11:00</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">弘大 / 延南洞散步</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Yeonnam-dong+Seoul" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-gray-800 font-bold">明洞逛街 + Olive Young</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Myeongdong+Shopping+Street" target="_blank" class="map-link">📍 導航</a>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-1">咖啡店隨意選。</p>
+                    <div id="d2-1" class="tip-box">
+                        • <strong>Olive Young</strong>: 記得攜帶護照，單筆滿 3 萬韓幣可現場退稅。<br>
+                        • 逛街品牌：HBAF、ABC Mart、各種韓系美妝。
+                    </div>
                 </div>
-                <div class="time-node relative pl-4">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">13:00</span>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d2-2')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">15:00</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">明洞逛街購物</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Myeong-dong+Walking+Street" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-gray-800 font-bold">Blue Bottle 明洞店 (下午茶)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Blue+Bottle+Myeongdong" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d2-2" class="tip-box">明洞店位置較隱密，裝潢很有現代感。</div>
+                </div>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d2-3')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">19:30</span>
+                    <div class="flex items-center justify-between bg-blue-50/60 p-2 rounded-lg">
+                        <span class="text-blue-900 font-black">南山夜櫻 + 首爾塔</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=N+Seoul+Tower" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d2-3" class="tip-box">
+                        若時間充足，建議從南山腳下慢慢走上去，櫻花步道非常美。或搭乘南山纜車省體力。
                     </div>
                 </div>
-                <div class="time-node relative pl-4">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">18:00</span>
-                    <div class="flex items-center justify-between">
-                        <span class="text-orange-600 font-bold">香港飯店 0410</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Paik+Jong-won+Hong+Kong+Ban-jum+0410+Myeongdong" target="_blank" class="map-link">📍 導航</a>
-                    </div>
-                </div>
-                <div class="time-node relative pl-4">
-                    <div class="bg-blue-50/60 p-3 rounded-xl flex items-center justify-between">
-                        <div>
-                            <span class="text-blue-900 font-black">南山公園夜櫻 + 首爾塔</span>
-                        </div>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Namsan+Seoul+Tower" target="_blank" class="map-link">📍 導航</a>
-                    </div>
-                </div>
+                <a href="https://www.dcard.tw/f/korea_travel/p/260246823" target="_blank" class="dcard-footer-btn">
+                    <span>📖 參考卡友 D2 明洞精華心得</span>
+                </a>
             </div>
         </section>
 
         <!-- Day 3 -->
         <section id="day3" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
-                <span class="day-badge">文化 + 隱藏櫻花 + 重點美食</span>
-                <h2 class="text-lg font-bold text-pink-500">3/30 (日) 安國文化日</h2>
+                <span class="day-badge">3/30 (SUN)</span>
+                <h2 class="text-lg font-bold text-pink-500">三清洞與益善洞深度遊</h2>
             </div>
             <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-6">
-                <div class="time-node relative pl-4">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">09:00</span>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">Artist Bakery (安國)</span>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-1')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">10:00</span>
+                    <span class="text-gray-800 font-bold">北村韓屋村 (嘉會洞)</span>
+                    <div id="d3-1" class="tip-box">這區是傳統住宅，拍照請保持安靜。推薦找能拍到韓屋頂與首爾塔同框的角度。</div>
+                </div>
+             <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-2')">
+                    <span class="text-pink-500 font-bold text-sm  block mb-1">12:00</span>
+                    <div class="flex items-center justify-between highlight-item p-2 rounded-lg">
+                        <span class="text-gray-800 font-bold">三清洞摩西年糕鍋</span>
+                         <a href="https://share.google/8yJDm3biExPm9VHY9" target="_blank" class="map-link">📍 導航</a>
+
+                    </div>
+                    <div id="d3-2" class="tip-box">韓國吃到最好吃的年糕。另外對面的三清洞麵疙瘩人潮非常多，聽友人說很好吃，有時間的話可以排排看。。</div>
+                </div>
+
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-3')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">12:30</span>
+                    <div class="flex items-center justify-between highlight-item p-2 rounded-lg">
+                        <span class="text-yellow-800 font-black">Artist Bakery (安國店)</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Artist+Bakery+Anguk" target="_blank" class="map-link">📍 導航</a>
                     </div>
-                </div>
-                <div class="time-node relative pl-4">
-                    <div class="bg-pink-100/50 p-3 rounded-xl border border-pink-200 flex items-center justify-between">
-                        <span class="text-pink-700 font-black">正讀圖書館 (垂櫻)</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Jeongdok+Public+Library" target="_blank" class="map-link">📍 導航</a>
+                    <div id="d3-3" class="tip-box">
+                        與 London Bagel 是同團隊。鹽麵包專賣店。<br>
+                        <span class="important-text">攻略：</span>先去抽號碼牌，再去逛周邊韓屋。
                     </div>
                 </div>
-                <div class="time-node relative pl-4">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-4')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">15:30</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">益善洞韓屋村</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Ikseon-dong+Hanok+Village" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-gray-800 font-bold">益善洞：自然島鹽麵包</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Jayeon-do+Salt+Bread+Ikseondong" target="_blank" class="map-link">📍 導航</a>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-1 italic">推薦：小夏鹽田下午茶</p>
-                </div>
-                <div class="time-node relative pl-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">東大門 DDP</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Dongdaemun+Design+Plaza" target="_blank" class="map-link">📍 導航</a>
+                    <div id="d3-4" class="tip-box">
+                        口感外酥內軟，奶油香味爆棚。一次買四個一組（12,000韓幣）。
                     </div>
                 </div>
-                <div class="time-node relative pl-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-orange-900 font-black text-lg">花蟹世界 (醬蟹)</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Flower+Crab+World+Seoul" target="_blank" class="map-link">📍 導航</a>
+
+                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-4')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">18:30</span>
+                    <div class="flex items-center justify-between food-item p-3 rounded-xl border-2 border-orange-200">
+                        <span class="text-orange-900 font-black">晚餐：給豬的男人 (Don-ge-nam)</span>
+                        <a href="https://maps.app.goo.gl/wdDT7Fgg684Ay3na8" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d3-4" class="tip-box">
+                        益善洞超人氣烤肉！<br>
+                        必點：熟成五花肉。店員會幫忙烤，肉質非常紮實且不油膩。
                     </div>
                 </div>
+                <a href="https://www.dcard.tw/f/korea_travel/p/259859265" target="_blank" class="dcard-footer-btn">
+                    <span>📖 參考卡友 D3 益善/三清心得</span>
+                </a>
             </div>
         </section>
 
         <!-- Day 4 -->
         <section id="day4" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
-                <span class="day-badge">櫻花規模最大 + 漢江日</span>
-                <h2 class="text-lg font-bold text-pink-500">3/31 (一) 汝矣島櫻花</h2>
+                <span class="day-badge">3/31 (MON)</span>
+                <h2 class="text-lg font-bold text-blue-500">漢南洞時尚與漢江公園</h2>
             </div>
             <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-6">
-                <div class="time-node relative pl-4">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-1')">
+                    <span class="text-blue-500 font-bold text-sm block mb-1">11:00</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">望遠市場</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Mangwon+Market" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-gray-800 font-bold">漢南洞逛街巡禮</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Mardi+Mercredi+Hannam" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d4-1" class="tip-box">
+                        <strong>必逛清單：</strong><br>
+                        • <strong>Mardi Mercredi</strong>: 小雛菊上衣，有兩三個分館。<br>
+                        • <strong>Marithe</strong>: 經典 Logo T 跟帽子。<br>
+                        • <strong>Rockfish</strong>: 韓系瑪莉珍鞋與雨靴。
                     </div>
                 </div>
-                <div class="time-node relative pl-4">
-                    <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 flex items-center justify-between">
-                        <span class="text-blue-900 font-black text-lg">汝矣島輪中路 🌸</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Yeouido+Yunjung-ro+Cherry+Blossom" target="_blank" class="map-link">📍 導航</a>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-2')">
+                    <span class="text-blue-500 font-bold text-sm block mb-1">14:00</span>
+                    <div class="flex items-center justify-between highlight-item p-2 rounded-lg">
+                        <span class="text-blue-900 font-black">LPT (Lowide Coffee)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Lowide+Coffee+Hannam" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d4-2" class="tip-box">
+                        非常受歡迎的咖啡廳。草莓蛋糕與濃郁的拿鐵是卡友推薦標配。
                     </div>
                 </div>
-                <div class="time-node relative pl-4">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-3')">
+                    <span class="text-blue-500 font-bold text-sm block mb-1">17:00</span>
+                    <div class="flex items-center justify-between bg-pink-50 p-2 rounded-lg">
+                        <span class="text-pink-700 font-black">汝矣島櫻花步道</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Yeouido+Park" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d4-3" class="tip-box">
+                        首爾最有名的櫻花隧道，一整排粉紅花海。
+                    </div>
+                </div>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-4')">
+                    <span class="text-blue-500 font-bold text-sm block mb-1">19:30</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">楊花 / 仙遊島公園</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Seonyudo+Park+Seoul" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-gray-800 font-bold">漢江公園泡麵 (宵夜)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Yeouido+Hangang+Park" target="_blank" class="map-link">📍 導航</a>
                     </div>
+                    <div id="d4-4" class="tip-box">去便利商店買泡麵，用專屬機器煮。這就是最地道的首爾生活！</div>
                 </div>
-                <div class="time-node relative pl-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-red-700 font-black text-lg">給豬的男人</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Don-geuneun-nam-ja+Hongdae" target="_blank" class="map-link">📍 導航</a>
-                    </div>
-                </div>
+                <a href="https://www.dcard.tw/f/korea_travel/p/260148951" target="_blank" class="dcard-footer-btn">
+                    <span>📖 參考卡友 D4 漢南洞心得</span>
+                </a>
             </div>
         </section>
 
         <!-- Day 5 -->
         <section id="day5" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
-                <span class="day-badge">浪漫收尾 + 拍照節奏</span>
-                <h2 class="text-lg font-bold text-pink-500">4/1 (二) 聖水與石村湖</h2>
+                <span class="day-badge">4/1 (TUE)</span>
+                <h2 class="text-lg font-bold text-pink-500">聖水洞時尚與石村湖</h2>
             </div>
-            <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-6">
-                <div class="time-node relative pl-4">
+            <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-5">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-1')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">11:00</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-800 font-bold">聖水洞逛街</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Seongsu-dong+Cafe+Street" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-gray-800 font-bold">聖水洞逛街 (品牌重點)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Seongsu-dong+Shopping" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d5-1" class="tip-box">
+                        • <strong>fwee Agit</strong>: 下午四點前通常還有貨，滿額送吊飾。<br>
+                        • <strong>TAMBURINS</strong>: 必拍建築物，香氛護手霜首選。
                     </div>
                 </div>
-                <div class="time-node relative pl-4">
-                    <div class="bg-green-50/50 p-3 rounded-xl border border-green-200 flex items-center justify-between">
-                        <span class="text-green-800 font-bold">首爾林賞櫻</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Seoul+Forest+Park" target="_blank" class="map-link">📍 導航</a>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-2')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">14:00</span>
+                    <div class="flex items-center justify-between highlight-item p-2 rounded-lg">
+                        <span class="text-pink-800 font-black">뚜흐느솔 (Tournesol)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Tournesol+Cafe+Seongsu" target="_blank" class="map-link">📍 導航</a>
                     </div>
+                    <div id="d5-2" class="tip-box">帥哥咖啡廳(因應女朋友需要)</div>
                 </div>
-                <div class="time-node relative pl-4">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-3')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">16:30</span>
                     <div class="flex items-center justify-between">
-                        <span class="text-purple-700 font-bold">豬腳小姐 (弘大)</span>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Myth+Jokbal+Hongdae" target="_blank" class="map-link">📍 導航</a>
+                        <span class="text-green-800 font-bold">首爾林 (賞櫻)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Seoul+Forest" target="_blank" class="map-link">📍 導航</a>
                     </div>
                 </div>
-                <div class="time-node relative pl-4">
-                    <div class="bg-indigo-900 p-4 rounded-2xl shadow-xl flex items-center justify-between">
-                        <span class="text-white font-black italic">石村湖最終夜櫻</span>
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-4')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">19:30</span>
+                    <div class="flex items-center justify-between bg-indigo-900 p-3 rounded-xl">
+                        <span class="text-white font-black">石村湖夜櫻 (完美結尾)</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Seokchon+Lake+Park" target="_blank" class="map-link">📍 導航</a>
                     </div>
+                    <div id="d5-4" class="tip-box">圍繞著湖泊的櫻花圈，搭配樂天世界的城堡，夜景一絕。</div>
                 </div>
+                <a href="https://www.dcard.tw/f/korea_travel/p/260160224" target="_blank" class="dcard-footer-btn">
+                    <span>📖 參考卡友 D5 聖水洞心得</span>
+                </a>
             </div>
         </section>
-
-        <!-- Day 6 -->
-        <section id="day6" class="day-content animate__animated animate__fadeIn">
-            <div class="mb-4 text-center">
-                <span class="day-badge uppercase">Flight</span>
-                <h2 class="text-lg font-bold text-gray-500">4/2 (三) 凌晨返台</h2>
-            </div>
-            <div class="glass-card rounded-3xl p-10 border-2 border-dashed border-pink-200 text-center flex flex-col items-center justify-center">
-                <div class="text-5xl mb-6">🛫</div>
-                <p class="text-xl font-bold text-gray-700 italic">00:20 起飛返台</p>
-            </div>
-        </section>
-
-        <!-- AI Assistant Box -->
-        <div class="mt-8 p-5 rounded-2xl ai-box shadow-md">
-            <p class="text-[10px] text-pink-400 font-bold mb-2 uppercase">AI Travel Assistant</p>
-            <button onclick="askAI()" class="w-full bg-pink-400 text-white py-2 rounded-xl text-sm font-bold shadow-sm hover:bg-pink-500 transition-all">✨ 獲取今日旅遊靈感</button>
-            <div id="ai-response" class="mt-4 text-xs text-gray-600 leading-relaxed hidden bg-white/50 p-3 rounded-lg border border-pink-50"></div>
-        </div>
-
-        <!-- AI Translator -->
-        <div class="mt-4 p-5 rounded-2xl bg-white/80 border border-blue-100 shadow-md">
-            <p class="text-[10px] text-blue-400 font-bold mb-2 uppercase">Quick Translator</p>
-            <div class="flex gap-2">
-                <input type="text" id="trans-input" placeholder="去機場怎麼走？" class="flex-1 text-xs border border-gray-100 rounded-lg px-3 py-2 outline-none focus:border-blue-300">
-                <button onclick="translateText()" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-bold">翻譯</button>
-            </div>
-            <div id="trans-result" class="text-[11px] text-blue-800 bg-blue-50/50 p-3 rounded-lg hidden mt-3"></div>
-        </div>
 
     </main>
 
-    <!-- Settings Button (for API Key) -->
-    <button onclick="toggleSettings()" class="fixed bottom-6 right-6 w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-lg z-[100] opacity-50 hover:opacity-100 transition-opacity">⚙️</button>
-    <div id="settings-panel" class="fixed inset-0 bg-black/60 z-[110] hidden flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm">
-            <h3 class="font-bold text-lg mb-2">設定 AI 密鑰</h3>
-            <p class="text-xs text-gray-500 mb-4">發佈到 GitHub 後需要填寫 API Key 才能使用 AI 功能。</p>
-            <input type="password" id="api-key-input" placeholder="輸入您的 Gemini API Key" class="w-full border rounded-xl px-4 py-3 text-sm mb-4 outline-none focus:border-pink-300">
-            <div class="flex gap-2">
-                <button onclick="saveApiKey()" class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold text-sm">儲存</button>
-                <button onclick="toggleSettings()" class="flex-1 bg-gray-100 text-gray-500 py-3 rounded-xl font-bold text-sm">取消</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // 優先從 LocalStorage 讀取 Key，如果沒有則嘗試環境變數
-        let USER_API_KEY = localStorage.getItem('GEMINI_API_KEY') || "";
-
-        async function fetchGemini(prompt) {
-            // 如果是在我們這個預覽環境，__apiKey 會被自動處理，但 GitHub 不會
-            const key = USER_API_KEY || "";
-            if (!key) {
-                return "💡 請點擊右下角齒輪圖示，設定您的 API Key 後即可啟用 AI 功能！";
-            }
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: "你是一位精通首爾旅遊的導遊，請使用繁體中文回答，語氣要活潑親切。如果是翻譯，提供韓文與拼音。" }] }
-            };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                return result.candidates?.[0]?.content?.parts?.[0]?.text || "AI 忙碌中，請稍後再試。";
-            } catch (error) {
-                console.error(error);
-                return "❌ 連線錯誤，請檢查您的 API Key 是否正確。";
-            }
-        }
-
-        async function askAI() {
-            const activeDay = document.querySelector('.day-content.active h2').innerText;
-            const resBox = document.getElementById('ai-response');
-            resBox.classList.remove('hidden');
-            resBox.innerHTML = '<span class="loading-dots">AI 正在思考專屬建議</span>';
-            const text = await fetchGemini(`根據行程「${activeDay}」，提供三個實用的在地旅遊小撇步。`);
-            resBox.innerHTML = text.replace(/\n/g, '<br>');
-        }
-
-        async function translateText() {
-            const input = document.getElementById('trans-input').value;
-            const resBox = document.getElementById('trans-result');
-            if (!input) return;
-            resBox.classList.remove('hidden');
-            resBox.innerHTML = '<span class="loading-dots">翻譯中</span>';
-            const text = await fetchGemini(`請翻譯成韓語並附上羅馬拼音：${input}`);
-            resBox.innerHTML = text.replace(/\n/g, '<br>');
-        }
-
-        function toggleSettings() {
-            const panel = document.getElementById('settings-panel');
-            panel.classList.toggle('hidden');
-            if (!panel.classList.contains('hidden')) {
-                document.getElementById('api-key-input').value = USER_API_KEY;
-            }
-        }
-
-        function saveApiKey() {
-            const val = document.getElementById('api-key-input').value.trim();
-            localStorage.setItem('GEMINI_API_KEY', val);
-            USER_API_KEY = val;
-            alert('API Key 已儲存！現在您可以試試看 AI 功能了。');
-            toggleSettings();
-        }
-
+        // 顯示對應天數的內容
         function showDay(dayId) {
-            document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(dayId).classList.add('active');
+            // 隱藏所有內容
+            document.querySelectorAll('.day-content').forEach(c => {
+                c.classList.remove('active');
+            });
+            // 顯示目標內容
+            const target = document.getElementById(dayId);
+            if(target) target.classList.add('active');
+            
+            // 更新按鈕狀態
             document.querySelectorAll('.nav-btn').forEach(b => {
                 b.classList.remove('active');
                 if (b.getAttribute('data-day') === dayId) b.classList.add('active');
             });
-            document.getElementById('ai-response').classList.add('hidden');
+            // 捲動回頂部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        window.onload = () => showDay('day1');
+        // 切換 Tip Box 顯示 (點擊節點觸發)
+        function toggleTip(id) {
+            const tip = document.getElementById(id);
+            if(!tip) return;
+
+            const isVisible = tip.style.display === 'block';
+            
+            // 隱藏所有其他的 tip
+            document.querySelectorAll('.tip-box').forEach(t => {
+                t.style.display = 'none';
+            });
+
+            // 如果原本是隱藏的，就顯示它
+            if(!isVisible) {
+                tip.style.display = 'block';
+                // 加入一點淡入動畫
+                tip.classList.add('animate__animated', 'animate__fadeIn');
+            }
+        }
+
+        // 初始化顯示第一頁
+        window.onload = () => showDay('prep');
     </script>
 </body>
 </html>
