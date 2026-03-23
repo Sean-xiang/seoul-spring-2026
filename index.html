@@ -121,6 +121,14 @@
             border: 1px solid rgba(255, 154, 158, 0.4);
             background: rgba(255, 245, 245, 0.8);
         }
+        input[type="number"], input[type="text"] {
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box; /* 確保 padding 不增加寬度 */
+        }
+
         .important-text { color: #e11d48; font-weight: bold; }
     </style>
 </head>
@@ -203,26 +211,27 @@
                 </a>
             </div>
         </section>
-        <section id="cacula" class="day-content glass-card p-5 rounded-3xl shadow-lg animate__animated animate__fadeIn">
+          <section id="cacula" class="glass-card p-5 rounded-3xl shadow-lg animate__animated animate__fadeIn">
             <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                 <span class="mr-2">💰</span> 匯率計算機
             </h2>
-            <div class="space-y-3">
-                <div>
+            <div class="space-y-4">
+                <div class="w-full">
                     <label class="text-xs text-gray-500 ml-1">韓幣金額 (KRW)</label>
-                    <input type="number" id="krwInput" placeholder="請輸入韓幣" oninput="convertCurrency()" class="text-lg font-bold mt-1">
+                    <input type="number" id="krwInput" placeholder="請輸入韓幣" oninput="convertCurrency()" class="text-lg font-bold mt-1 block w-full">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-xs text-gray-500 ml-1">匯率 (固定 0.021)</label>
-                        <div class="bg-gray-100 p-2 rounded-lg font-mono text-center">0.021</div>
+                <!-- 使用 grid-cols-2 並確保內容物 w-full 以防超出 -->
+                <div class="grid grid-cols-2 gap-3 w-full">
+                    <div class="min-w-0">
+                        <label class="text-xs text-gray-500 ml-1 block truncate">匯率 (固定 0.021)</label>
+                        <div class="bg-gray-100 p-2 rounded-lg font-mono text-center mt-1 border border-transparent">0.021</div>
                     </div>
-                    <div>
-                        <label class="text-xs text-gray-500 ml-1">刷卡回饋 %</label>
-                        <input type="number" id="rewardInput" value="3" oninput="convertCurrency()" class="text-center font-mono">
+                    <div class="min-w-0">
+                        <label class="text-xs text-gray-500 ml-1 block truncate">刷卡回饋 %</label>
+                        <input type="number" id="rewardInput" value="3" oninput="convertCurrency()" class="text-center font-mono mt-1 block w-full">
                     </div>
                 </div>
-                <div class="bg-pink-50 p-4 rounded-2xl border-2 border-pink-200 text-center">
+                <div class="bg-pink-50 p-4 rounded-2xl border-2 border-pink-200 text-center w-full">
                     <p class="text-sm text-pink-600">估計台幣金額 (TWD)</p>
                     <p class="text-3xl font-black text-pink-700" id="twdResult">$ 0</p>
                     <p class="text-xs text-pink-400 mt-1" id="rewardDetail">已扣除 0% 回饋</p>
