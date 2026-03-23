@@ -134,6 +134,7 @@
 
     <!-- 分頁選單 -->
     <nav class="sticky-nav px-4 py-4 mb-4 overflow-x-auto no-scrollbar flex space-x-2">
+        <button onclick="showDay('cacula')" class="nav-btn flex-1 min-w-[70px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-yellow-50 shadow-sm" data-day="cacula">計算機</button>
         <button onclick="showDay('prep')" class="nav-btn flex-1 min-w-[70px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="prep">💡攻略</button>
         <button onclick="showDay('day1')" class="nav-btn flex-1 min-w-[60px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day1">D1</button>
         <button onclick="showDay('day2')" class="nav-btn flex-1 min-w-[60px] px-3 py-2 rounded-xl bg-white text-gray-400 text-xs font-bold border border-pink-50 shadow-sm" data-day="day2">D2</button>
@@ -143,7 +144,7 @@
     </nav>
 
     <main class="px-5 max-w-md mx-auto">
-        
+
         <!-- 出發前攻略 -->
         <section id="prep" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
@@ -202,7 +203,34 @@
                 </a>
             </div>
         </section>
+        <section id="cacula" class="day-content glass-card p-5 rounded-3xl shadow-lg animate__animated animate__fadeIn">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <span class="mr-2">💰</span> 匯率計算機
+            </h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-500 ml-1">韓幣金額 (KRW)</label>
+                    <input type="number" id="krwInput" placeholder="請輸入韓幣" oninput="convertCurrency()" class="text-lg font-bold mt-1">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-500 ml-1">匯率 (固定 0.021)</label>
+                        <div class="bg-gray-100 p-2 rounded-lg font-mono text-center">0.021</div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500 ml-1">刷卡回饋 %</label>
+                        <input type="number" id="rewardInput" value="3" oninput="convertCurrency()" class="text-center font-mono">
+                    </div>
+                </div>
+                <div class="bg-pink-50 p-4 rounded-2xl border-2 border-pink-200 text-center">
+                    <p class="text-sm text-pink-600">估計台幣金額 (TWD)</p>
+                    <p class="text-3xl font-black text-pink-700" id="twdResult">$ 0</p>
+                    <p class="text-xs text-pink-400 mt-1" id="rewardDetail">已扣除 0% 回饋</p>
+                </div>
+            </div>
+        </section>
 
+        
         <!-- Day 1 -->
         <section id="day1" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
@@ -315,8 +343,8 @@
                 </div>
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d2-4')">
                     <span class="text-pink-500 font-bold text-sm block mb-1">19:30</span>
-                    <div class="flex items-center justify-between bg-blue-50/60 p-2 rounded-lg">
-                        <span class="text-blue-900 font-black">南山夜櫻 + 首爾塔</span>
+                    <div class="flex items-center justify-between bg-pink-50/60 p-2 rounded-lg">
+                        <span class="text-pink-900 font-black">南山夜櫻 + 首爾塔</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=N+Seoul+Tower" target="_blank" class="map-link">📍 導航</a>
                     </div>
                     <div id="d2-4" class="tip-box">
@@ -330,36 +358,51 @@
         </section>
 
         <!-- Day 3 -->
-        <section id="day3" class="day-content animate__animated animate__fadeIn">
+       <section id="day3" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
                 <span class="day-badge">3/30 (MON)</span>
-                <h2 class="text-lg font-bold text-pink-500">三清洞與益善洞深度遊</h2>
+                <h2 class="text-lg font-bold text-pink-500">望遠市場、三清洞與益善洞深度遊</h2>
             </div>
             <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-6">
+                <!-- 新增：望遠市場 -->
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-0')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">09:00</span>
+                    <div class="flex items-center justify-between food-item p-3 rounded-xl border-2 border-orange-200">
+                        <span class="text-orange-900 font-black">望遠市場 (Mangwon Market)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Mangwon+Market" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d3-0" class="tip-box text-[11px]">
+                        <strong>📍 市場必吃清單：</strong><br>
+                        • <strong>望遠手工可樂餅</strong>：便宜又紮實的傳統味。<br>
+                        • <strong>QS 炸雞</strong>：口味超多，小杯裝方便邊走邊吃。<br>
+                        • <strong>糖葫蘆、糯米甜甜圈</strong>：韓國道地市場甜品。<br>
+                        • <strong>雨耳樂 (U-Eura-ki)</strong>：必點巨大的炸辣椒。
+                    </div>
+                </div>
+
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-1')">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">10:00</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">11:00</span>
                     <span class="text-gray-800 font-bold">北村韓屋村 (嘉會洞)</span>
-                    
-                  <div id="d3-1" class="tip-box text-[11px]">
+                    <div id="d3-1" class="tip-box text-[11px]">
                         <strong>📍 北村八景推薦路線：</strong><br>
                         • 一至四景：看昌德宮、特色工坊。<br>
                         • <strong>五、六景 (最火)</strong>：嘉會洞巷子，拍韓屋與首爾塔同框。<br>
                         • 八景：三清洞石階路下山接年糕鍋。
                     </div>
                 </div>
-             <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-2')">
-                    <span class="text-pink-500 font-bold text-sm  block mb-1">12:00</span>
+
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-2')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">12:30</span>
                     <div class="flex items-center justify-between food-item p-3 rounded-xl border-2 border-orange-200">
                         <span class="text-orange-900 font-black">午餐 : 三清洞摩西年糕鍋</span>
-                         <a href="https://share.google/8yJDm3biExPm9VHY9" target="_blank" class="map-link">📍 導航</a>
-
+                        <a href="https://share.google/8yJDm3biExPm9VHY9" target="_blank" class="map-link">📍 導航</a>
                     </div>
-                     <div id="d3-2" class="tip-box">必點：起司+海鮮口味，最後一定要「炒飯」！韓國吃到最好吃的年糕。另外對面的三清洞麵疙瘩人潮非常多，聽友人說很好吃，有時間的話可以排排看。。</div>
+                    <div id="d3-2" class="tip-box">必點：起司+海鮮口味，最後一定要「炒飯」！韓國吃到最好吃的年糕。另外對面的三清洞麵疙瘩人潮非常多，聽友人說很好吃，有時間的話可以排排看。</div>
                 </div>
 
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-3')">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">13:30</span>
-                    <div class="flex items-center justify-between highlight-item p-2 rounded-lg">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">14:00</span>
+                    <div class="flex items-center justify-between  p-2 rounded-lg">
                         <span class="text-yellow-800 font-black">Artist Bakery (安國店)</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Artist+Bakery+Anguk" target="_blank" class="map-link">📍 導航</a>
                     </div>
@@ -368,8 +411,9 @@
                         <span class="important-text">攻略：</span>先去按 Catchtable 再逛北村。必吃蔥乳酪鹽麵包
                     </div>
                 </div>
+
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-4A')">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">15:30</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">16:00</span>
                     <div class="flex items-center justify-between">
                         <span class="text-gray-900 font-black">延南洞咖啡散步</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Yeonnam-dong+Cafe+Street" target="_blank" class="map-link">📍 導航</a>
@@ -381,7 +425,7 @@
                     </div>
                 </div>
 
-                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-4')">
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-4')">
                     <span class="text-pink-500 font-bold text-sm block mb-1">18:30</span>
                     <div class="flex items-center justify-between food-item p-3 rounded-xl border-2 border-orange-200">
                         <span class="text-orange-900 font-black">晚餐：給豬的男人 (Don-ge-nam)</span>
@@ -394,7 +438,7 @@
                 </div>
 
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d3-6')">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">19:30</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">20:00</span>
                     <div class="flex items-center justify-between ">
                         <span class="text-gray-800 font-black">京義線森林公園散步</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Gyeongui+Line+Forest+Park" target="_blank" class="map-link">📍 導航</a>
@@ -414,11 +458,11 @@
         <section id="day4" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
                 <span class="day-badge">3/31 (TUE)</span>
-                <h2 class="text-lg font-bold text-blue-500">漢南洞時尚與漢江公園</h2>
+                <h2 class="text-lg font-bold text-pink-500">漢南洞時尚與漢江公園</h2>
             </div>
             <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-6">
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-1')">
-                    <span class="text-blue-500 font-bold text-sm block mb-1">11:00</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">11:00</span>
                     <div class="flex items-center justify-between">
                         <span class="text-gray-800 font-bold">漢南洞逛街</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Mardi+Mercredi+Hannam" target="_blank" class="map-link">📍 導航</a>
@@ -431,7 +475,7 @@
                     </div>
                 </div>
                  <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-2A')">
-                    <span class="text-blue-500 font-bold text-sm block mb-1">12:30</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">12:30</span>
                     <div class="flex items-center justify-between food-item p-3 rounded-xl border-2 border-orange-200">
                         <span class="text-orange-900 font-black ">午餐 : 張智寧醬蟹장지녕간장게장 </span>
                         <a href="https://www.google.com/search?q=%EC%9A%A9%EC%82%B0%EA%B5%AC+%ED%95%9C%EB%82%A8%EB%8F%99+828+B1&rlz=1C1CHZN_zh-TWTW1108TW1108&oq=%EC%9A%A9%EC%82%B0%EA%B5%AC+%ED%95%9C%EB%82%A8%EB%8F%99+828+B1&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigATIHCAMQIRigAdIBBzM0NmowajeoAgCwAgA&sourceid=chrome&ie=UTF-8" target="_blank" class="map-link">📍 導航</a>
@@ -439,9 +483,9 @@
                     <div id="d4-2A" class="tip-box">☎️0507-1311-7754 (Naver map輸入電話即可找到) ❗微辣會真的很辣❗ </div>
                 </div>
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-2')">
-                    <span class="text-blue-500 font-bold text-sm block mb-1">14:00</span>
-                    <div class="flex items-center justify-between highlight-item p-2 rounded-lg">
-                        <span class="text-blue-900 font-black">LPT (Lowide Coffee)</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">14:00</span>
+                    <div class="flex items-center justify-between p-2 rounded-lg">
+                        <span class="text-yellow-900 font-black">LPT (Lowide Coffee)</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Lowide+Coffee+Hannam" target="_blank" class="map-link">📍 導航</a>
                     </div>
                     <div id="d4-2" class="tip-box">
@@ -449,7 +493,7 @@
                     </div>
                 </div>
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-3')">
-                    <span class="text-blue-500 font-bold text-sm block mb-1">17:00</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">17:00</span>
                     <div class="flex items-center justify-between bg-pink-50 p-2 rounded-lg">
                         <span class="text-pink-700 font-black">汝矣島櫻花步道</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Yeouido+Park" target="_blank" class="map-link">📍 導航</a>
@@ -459,7 +503,7 @@
                     </div>
                 </div>
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d4-4')">
-                    <span class="text-blue-500 font-bold text-sm block mb-1">19:30</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">19:30</span>
                     <div class="flex items-center justify-between">
                         <span class="text-gray-800 font-bold">漢江公園泡麵 (宵夜)</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Yeouido+Hangang+Park" target="_blank" class="map-link">📍 導航</a>
@@ -473,12 +517,13 @@
         </section>
 
         <!-- Day 5 -->
-        <section id="day5" class="day-content animate__animated animate__fadeIn">
+       <section id="day5" class="day-content animate__animated animate__fadeIn">
             <div class="mb-4 text-center">
                 <span class="day-badge">4/1 (WED)</span>
-                <h2 class="text-lg font-bold text-pink-500">聖水洞時尚與石村湖</h2>
+                <h2 class="text-lg font-bold text-pink-500">聖水洞時尚與石村湖櫻花</h2>
             </div>
             <div class="glass-card rounded-3xl p-6 timeline-line ml-2 space-y-5">
+                <!-- 11:00 聖水洞逛街 -->
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-1')">
                     <span class="text-pink-500 font-bold text-sm block mb-1">11:00</span>
                     <div class="flex items-center justify-between">
@@ -491,45 +536,66 @@
                     </div>
                 </div>
 
-                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-1A')">
-                    <span class="text-blue-500 font-bold text-sm block mb-1">12:30</span>
+                <!-- 12:30 午餐 -->
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-1A')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">12:30</span>
                     <div class="flex items-center justify-between food-item p-3 rounded-xl border-2 border-orange-200">
                         <span class="text-orange-900 font-black ">午餐 : 祖傳三代馬鈴薯排骨湯 </span>
                         <a href="https://dailycheska.com/travel/korea-seoul-somunnanseongsugamjatang/" target="_blank" class="map-link">📍 導航</a>
                     </div>
-                    <div id="d5-1A" class="tip-box">祖傳三代馬鈴薯排骨湯位在首爾地鐵聖水站 4 號出口出來，走路大約 5 分鐘就能抵達，交通相當方便
-                     </div>
+                    <div id="d5-1A" class="tip-box text-[11px]">聖水站 4 號出口走路 5 分鐘，排隊人潮多建議提前到。</div>
                 </div>
-               
-                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-2')">
+
+                <!-- 14:00 新增：韓國本思醫院醫美 -->
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-med')">
                     <span class="text-pink-500 font-bold text-sm block mb-1">14:00</span>
-                    <div class="flex items-center justify-between highlight-item p-2 rounded-lg">
-                        <span class="text-pink-800 font-black">뚜흐느솔 (Tournesol)</span>
+                    <div class="flex items-center justify-between medical-item p-3 rounded-xl border-2 border-blue-200">
+                        <span class="text-blue-900 font-black">🏥 醫美行程：本思醫院 (PONS)</span>
+                        <a href="https://www.google.com/maps/search/?api=1&query=PONS+Medical+Clinic+Seoul" target="_blank" class="map-link">📍 導航</a>
+                    </div>
+                    <div id="d5-med" class="tip-box">
+                        <span class="important-text">醫美重點：</span><br>
+                        • 預約確認：請提前 10 分鐘抵達。<br>
+                        • 必備：護照（退稅用）、預約截圖。<br>
+                        • 術後注意：保濕補水，聽從醫護人員叮嚀。
+                    </div>
+                </div>
+
+                <!-- 16:30 帥哥咖啡廳 -->
+                <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-2')">
+                    <span class="text-pink-500 font-bold text-sm block mb-1">16:30</span>
+                    <div class="flex items-center justify-between p-2 rounded-lg">
+                        <span class="text-yellow-800 font-black">뚜흐느솔 (Tournesol)</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Tournesol+Cafe+Seongsu" target="_blank" class="map-link">📍 導航</a>
                     </div>
                     <div id="d5-2" class="tip-box">帥哥咖啡廳(因應女朋友需要)</div>
                 </div>
+
+                <!-- 18:00 首爾林 (原 16:30 往後延) -->
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-3')">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">16:30</span>
-                    <div class="flex items-center justify-between">
-                        <span class="text-green-800 font-bold">首爾林 (賞櫻)</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">18:00</span>
+                    <div class="flex items-center justify-between bg-pink-50 p-2 rounded-lg">
+                        <span class="text-pink-700 font-black">首爾林</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Seoul+Forest" target="_blank" class="map-link">📍 導航</a>
                     </div>
+                    <div id="d5-3" class="tip-box text-[11px]">黃昏時分去走走，光線很適合拍照。</div>
                 </div>
+
+                <!-- 20:30 石村湖 (原 19:30 往後延) -->
                 <div class="time-node clickable-node relative pl-4" onclick="toggleTip('d5-4')">
-                    <span class="text-pink-500 font-bold text-sm block mb-1">19:30</span>
-                    <div class="flex items-center justify-between bg-indigo-900 p-3 rounded-xl">
-                        <span class="text-white font-black">石村湖夜櫻 (完美結尾)</span>
+                    <span class="text-pink-500 font-bold text-sm block mb-1">20:30</span>
+                    <div class="flex items-center justify-between bg-pink-50 p-2 rounded-lg">
+                        <span class="text-pink-700 font-black">石村湖賞櫻</span>
                         <a href="https://www.google.com/maps/search/?api=1&query=Seokchon+Lake+Park" target="_blank" class="map-link">📍 導航</a>
                     </div>
                     <div id="d5-4" class="tip-box">圍繞著湖泊的櫻花圈，搭配樂天世界的城堡，夜景一絕。</div>
                 </div>
+
                 <a href="https://www.dcard.tw/f/korea_travel/p/260160224" target="_blank" class="dcard-footer-btn">
                     <span>📖 聖水洞心得</span>
                 </a>
             </div>
         </section>
-
     </main>
 
     <script>
@@ -550,6 +616,36 @@
             });
             // 捲動回頂部
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function convertCurrency() {
+            const krw = document.getElementById('krwInput').value;
+            const reward = document.getElementById('rewardInput').value || 0;
+            const rate = 0.021;
+            
+            if (krw > 0) {
+                // 台幣金額 = 韓幣 * 匯率 * (1 - 回饋率)
+                let twd = krw * rate;
+                let finalTwd = twd * (1 - (reward / 100));
+                
+                document.getElementById('twdResult').innerText = '$ ' + Math.round(finalTwd).toLocaleString();
+                document.getElementById('rewardDetail').innerText = '已扣除 ' + reward + '% 刷卡回饋 (約省下 $' + Math.round(twd * (reward/100)) + ')';
+            } else {
+                document.getElementById('twdResult').innerText = '$ 0';
+                document.getElementById('rewardDetail').innerText = '請輸入金額';
+            }
+        }
+
+        // 圖片預覽邏輯
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imagePreview');
+                const placeholder = document.getElementById('imagePlaceholder');
+                output.src = reader.result;
+                output.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            };
+            reader.readAsDataURL(event.target.files[0]);
         }
 
         // 切換 Tip Box 顯示 (點擊節點觸發)
